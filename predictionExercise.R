@@ -55,7 +55,7 @@ corrplot(corMat, order = "FPC", method = "color", type = "lower", tl.cex = 0.8,
 #we choose to implement a principal components analysis to produce a set of linearly uncorrelated variables
 #to use as our predictors.
 
-*##Principal Components Analysis and Machine Learning*
+*Principal Components Analysis and Machine Learning*
 
 #We pre-process our data using a principal component analysis, leaving out the last column ('classe'). After pre-processing,
 #we use the 'predict' function to apply the pre-processing to both the training and validation subsets of the original larger 
@@ -84,7 +84,7 @@ varImpPlot(modelFit$finalModel, sort = TRUE, type = 1, pch = 19, col = 1, cex = 
 #Therefore, points high and to the right on this graph correspond to those principal components that are especially valuable 
 #in terms of being able to classify the observed training data.
 
-##Cross Validation Testing and Out-of-Sample Error Estimate
+*Cross Validation Testing and Out-of-Sample Error Estimate*
 
 #Call the 'predict' function again so that our trained model can be applied to our cross validation test dataset. 
 #We can then view the resulting table in the 'confusionMatrix' function's output to see how well the model 
@@ -108,7 +108,7 @@ out_of_sample_error
 #the cross validation dataset is 1.6%.
 
 
-##Predicted Results
+*Predicted Results*
 
 #Finally, we apply the pre-processing to the original testing dataset, after removing the extraneous column labeled 
 #'problem_id' (column 54). We then run our model against the testing dataset and display the predicted results.
