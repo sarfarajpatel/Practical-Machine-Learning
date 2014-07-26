@@ -50,7 +50,7 @@ corrplot(corMat, order = "FPC", method = "color", type = "lower", tl.cex = 0.8,
     tl.col = rgb(0, 0, 0))
     
 ![Image of Yaktocat]
-(https://octodex.github.com/images/yaktocat.png)
+(C:\Users\ABCD\Desktop\CorrelationGrid)
 
 #The CorrelationGrid shows the correlation between pairs of the predictors in our dataset. From a high-level perspective darker #blue
 #and darker red squares indicate high positive and high negative correlations, respectively. Based on this observation, 
