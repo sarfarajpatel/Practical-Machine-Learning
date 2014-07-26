@@ -97,6 +97,8 @@ number = 4), importance = TRUE)
 varImpPlot(modelFit$finalModel, sort = TRUE, type = 1, pch = 19, col = 1, cex = 1, 
     main = "Importance of the Individual Principal Components")
     
+![GraphImage]([url=http://postimg.org/image/piy3r7rob/][img=http://s17.postimg.org/piy3r7rob/Graph_Image.jpg][/url])
+
 #As you look from the top to the bottom on the y-axis, this plot shows each of the principal components in order from most 
 #important to least important. The degree of importance is shown on the x-axis–increasing from left to right. 
 #Therefore, points high and to the right on this graph correspond to those principal components that are especially valuable 
@@ -141,8 +143,15 @@ pred_final <- predict(modelFit, testPC)
 pred_final
 
 
+#NOTE : I am new to the Github and put a lot of efforts to include images in my course-write up but I could not. Also I was not
+#able to create gh-pages.
+#So if you want to take a look at the images you may prefer below links
 
+#http://s15.postimg.org/ukpfds1nb/Correlation_Grid.jpg
+#http://s17.postimg.org/5bknywu73/Graph_Image.png
 
+#Thanks in advance
+#Have a nice day!!
 
 
 
