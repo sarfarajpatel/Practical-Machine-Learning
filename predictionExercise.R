@@ -55,7 +55,7 @@ corrplot(corMat, order = "FPC", method = "color", type = "lower", tl.cex = 0.8,
 #we choose to implement a principal components analysis to produce a set of linearly uncorrelated variables
 #to use as our predictors.
 
-##Principal Components Analysis and Machine Learning
+*##Principal Components Analysis and Machine Learning*
 
 #We pre-process our data using a principal component analysis, leaving out the last column ('classe'). After pre-processing,
 #we use the 'predict' function to apply the pre-processing to both the training and validation subsets of the original larger 
