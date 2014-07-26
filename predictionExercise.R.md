@@ -49,7 +49,7 @@ corMat <- cor(small_train[, -54])
 corrplot(corMat, order = "FPC", method = "color", type = "lower", tl.cex = 0.8, 
     tl.col = rgb(0, 0, 0))
     
-![Image of Yaktocat]
+![Image of CorrelationGrid]
 (C:\Users\ABCD\Desktop\CorrelationGrid)
 
 #The CorrelationGrid shows the correlation between pairs of the predictors in our dataset. From a high-level perspective darker #blue
