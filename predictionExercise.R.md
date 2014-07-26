@@ -20,9 +20,14 @@ wm_test <- read.csv("pml-testing.csv", header = TRUE, na.strings = c("NA", ""))
 ##consistent columns in it. This will allow the fitted model to be applied to the testing dataset.
 
 csums <- colSums(is.na(wm))
+
 csums_log <- (csums == 0)
+
 training_fewer_cols <- wm[, (colSums(is.na(wm)) == 0)]
+
 wm_test <- wm_test[, (colSums(is.na(wm)) == 0)]
+
+
 
 ##Create another logical vector in order to delete additional unnecessary columns from the pared-down training and testing
 ##datasets. Column names in the dataset containing the entries shown in the 'grepl' function will have a value of 'TRUE' 
@@ -30,14 +35,19 @@ wm_test <- wm_test[, (colSums(is.na(wm)) == 0)]
 ##the columns of our dataset.
 
 del_cols_log <- grepl("X|user_name|timestamp|new_window", colnames(training_fewer_cols))
+
 training_fewer_cols <- training_fewer_cols[, !del_cols_log]
+
 wm_test_final <- wm_test[, !del_cols_log]
+
 
 ##We now split the updated training dataset into a training dataset and a validation dataset. 
 #This validation dataset will allow us to perform cross validation when developing our model.
 
 inTrain = createDataPartition(y = training_fewer_cols$classe, p = 0.7, list = FALSE)
+
 small_train = training_fewer_cols[inTrain, ]
+
 small_valid = training_fewer_cols[-inTrain, ]
 
 #At this point, our dataset contains 54 variables, with the last column containing the 'classe' variable we are trying to 
@@ -46,8 +56,9 @@ small_valid = training_fewer_cols[-inTrain, ]
 #complete capture of the information available.
 
 corMat <- cor(small_train[, -54])
-corrplot(corMat, order = "FPC", method = "color", type = "lower", tl.cex = 0.8, 
-    tl.col = rgb(0, 0, 0))
+
+corrplot(corMat, order = "FPC", method = "color", type = "lower", tl.cex = 0.8, tl.col = rgb(0, 0, 0))
+
     
     ![CorreplotGrid]([url=http://postimg.org/image/ukpfds1nb/][img=http://s15.postimg.org/ukpfds1nb/Correlation_Grid.jpg][/url])
    
@@ -66,16 +77,19 @@ corrplot(corMat, order = "FPC", method = "color", type = "lower", tl.cex = 0.8,
 #'training' dataset.
 
 preProc <- preProcess(small_train[, -54], method = "pca", thresh = 0.99)
+
 trainPC <- predict(preProc, small_train[, -54])
+
 valid_testPC <- predict(preProc, small_valid[, -54])
+
 
 #Next, we train a model using a random forest approach on the smaller training dataset. We chose to specify the use of a 
 #cross validation method when applying the random forest routine in the 'trainControl()' parameter. Without specifying this, 
 #the default method (bootstrapping) would have been used. The bootstrapping method seemed to take a lot longer to complete,
 #while essentially producing the same level of 'accuracy'.
 
-modelFit <- train(small_train$classe ~ ., method = "rf", data = trainPC, trControl = trainControl(method = "cv", 
-    number = 4), importance = TRUE)
+modelFit <- train(small_train$classe ~ ., method = "rf", data = trainPC, trControl = trainControl(method = "cv",
+number = 4), importance = TRUE)
     
     
 #We now review the relative importance of the resulting principal components of the trained model, 'modelFit'.    
@@ -102,10 +116,13 @@ confus$table
 #of the confusionmatrix, or more directly via the 'postresample' function.
 
 accur <- postResample(small_valid$classe, pred_valid_rf)
+
 model_accuracy <- accur[[1]]
+
 model_accuracy
 
 out_of_sample_error <- 1 - model_accuracy
+
 out_of_sample_error
 
 #The estimated accuracy of the model is 98.4% and the estimated out-of-sample error based on our fitted model applied to 
@@ -118,7 +135,9 @@ out_of_sample_error
 #'problem_id' (column 54). We then run our model against the testing dataset and display the predicted results.
 
 testPC <- predict(preProc, wm_test_final[, -54])
+
 pred_final <- predict(modelFit, testPC)
+
 pred_final
 
 
