@@ -1,7 +1,7 @@
-##The goal of this machine learning exercise is to predict the manner in which the participants did the exercise–that is, to predict the “classe” variable found in the training set. The prediction model will then be used to predict twenty different test cases, 
+##The goal of this machine learning exercise is to predict the manner in which the participants did the exercise–that is, to #predict the “classe” variable found in the training set. The prediction model will then be used to predict twenty different #test cases, 
 ##as provided in the testing dataset.
 
-##Begin by loading the required libraries and reading in the training and testing datasets, assigning missing values to entries that are currently 
+##Begin by loading the required libraries and reading in the training and testing datasets, assigning missing values to entries #that are currently 
 ##'NA' or blank.
 
 library(corrplot)
@@ -10,8 +10,8 @@ library(caret)
 wm <- read.csv("pml-training.csv", header = TRUE, na.strings = c("NA", ""))
 wm_test <- read.csv("pml-testing.csv", header = TRUE, na.strings = c("NA", ""))
 
-##Columns in the orignal training and testing datasets that are mostly filled with missing values are then removed. To do this, count the number of missing values in each column of the full training dataset. We use those sums to create a logical variable for each column of the dataset. 
-##The logical variable's value is 'TRUE' if a column has no missing values (i.e. if the colSums = 0). If there are missing values in the column, the logical variable's value corresponding to that column will be 'FALSE'.
+##Columns in the orignal training and testing datasets that are mostly filled with missing values are then removed. To do this, #count the number of missing values in each column of the full training dataset. We use those sums to create a logical variable #for each column of the dataset. 
+##The logical variable's value is 'TRUE' if a column has no missing values (i.e. if the colSums = 0). If there are missing #values in the column, the logical variable's value corresponding to that column will be 'FALSE'.
 
 ##Applying the logical variable to the columns of the training and testing datasets will only keep those columns that are 
 ##complete. (Note: This is a way of applying the 'complete.cases' function to the columns of a dataset.)
@@ -49,8 +49,10 @@ corMat <- cor(small_train[, -54])
 corrplot(corMat, order = "FPC", method = "color", type = "lower", tl.cex = 0.8, 
     tl.col = rgb(0, 0, 0))
     
+![Image of Yaktocat]
+(https://octodex.github.com/images/yaktocat.png)
 
-#The CorrelationGrid shows the correlation between pairs of the predictors in our dataset. From a high-level perspective darker blue
+#The CorrelationGrid shows the correlation between pairs of the predictors in our dataset. From a high-level perspective darker #blue
 #and darker red squares indicate high positive and high negative correlations, respectively. Based on this observation, 
 #we choose to implement a principal components analysis to produce a set of linearly uncorrelated variables
 #to use as our predictors.
