@@ -49,7 +49,7 @@ corMat <- cor(small_train[, -54])
 corrplot(corMat, order = "FPC", method = "color", type = "lower", tl.cex = 0.8, 
     tl.col = rgb(0, 0, 0))
     
-    ![CorrelationGrid]("http://s15.postimg.org/cunqsqo2j/Correlation_Grid.png")
+    ![CorreplotGrid]([url=http://postimg.org/image/ukpfds1nb/][img=http://s15.postimg.org/ukpfds1nb/Correlation_Grid.jpg][/url])
    
 
 
