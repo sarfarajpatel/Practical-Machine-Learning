@@ -49,8 +49,10 @@ corMat <- cor(small_train[, -54])
 corrplot(corMat, order = "FPC", method = "color", type = "lower", tl.cex = 0.8, 
     tl.col = rgb(0, 0, 0))
     
-![Image of CorrelationGrid]
-(C:\Users\ABCD\Desktop\CorrelationGrid)
+    ![CorrelationGrid](C:\Users\ABCD\Desktop\CorrelationGrid)
+    Format: ![Alt Text](url)
+
+
 
 #The CorrelationGrid shows the correlation between pairs of the predictors in our dataset. From a high-level perspective darker #blue
 #and darker red squares indicate high positive and high negative correlations, respectively. Based on this observation, 
