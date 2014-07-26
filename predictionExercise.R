@@ -84,7 +84,7 @@ varImpPlot(modelFit$finalModel, sort = TRUE, type = 1, pch = 19, col = 1, cex = 
 #Therefore, points high and to the right on this graph correspond to those principal components that are especially valuable 
 #in terms of being able to classify the observed training data.
 
-*Cross Validation Testing and Out-of-Sample Error Estimate*
+**Cross Validation Testing and Out-of-Sample Error Estimate**
 
 #Call the 'predict' function again so that our trained model can be applied to our cross validation test dataset. 
 #We can then view the resulting table in the 'confusionMatrix' function's output to see how well the model 
@@ -108,7 +108,7 @@ out_of_sample_error
 #the cross validation dataset is 1.6%.
 
 
-*Predicted Results*
+**Predicted Results**
 
 #Finally, we apply the pre-processing to the original testing dataset, after removing the extraneous column labeled 
 #'problem_id' (column 54). We then run our model against the testing dataset and display the predicted results.
