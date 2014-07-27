@@ -1,23 +1,21 @@
-##The goal of this machine learning exercise is to predict the manner in which the participants did the exercise–that is, to #predict the “classe” variable found in the training set. The prediction model will then be used to predict twenty different #test cases, 
-##as provided in the testing dataset.
+The goal of this machine learning exercise is to predict the manner in which the participants did the exercise–that is, to predict the “classe” variable found in the training set. The prediction model will then be used to predict twenty different test cases, as provided in the testing dataset.
 
-##Begin by loading the required libraries and reading in the training and testing datasets, assigning missing values to entries #that are currently 
-##'NA' or blank.
+Begin by loading the required libraries and reading in the training and testing datasets, assigning missing values to entries that are currently 'NA' or blank.
 
 library(corrplot)
+
 library(caret)
 
 wm <- read.csv("pml-training.csv", header = TRUE, na.strings = c("NA", ""))
+
 wm_test <- read.csv("pml-testing.csv", header = TRUE, na.strings = c("NA", ""))
 
-##Columns in the orignal training and testing datasets that are mostly filled with missing values are then removed. To do this, #count the number of missing values in each column of the full training dataset. We use those sums to create a logical variable #for each column of the dataset. 
-##The logical variable's value is 'TRUE' if a column has no missing values (i.e. if the colSums = 0). If there are missing #values in the column, the logical variable's value corresponding to that column will be 'FALSE'.
+Columns in the orignal training and testing datasets that are mostly filled with missing values are then removed. To do this, count the number of missing values in each column of the full training dataset. We use those sums to create a logical variable for each column of the dataset. 
+The logical variable's value is 'TRUE' if a column has no missing values (i.e. if the colSums = 0). If there are missing #values in the column, the logical variable's value corresponding to that column will be 'FALSE'.
 
-##Applying the logical variable to the columns of the training and testing datasets will only keep those columns that are 
-##complete. (Note: This is a way of applying the 'complete.cases' function to the columns of a dataset.)
+Applying the logical variable to the columns of the training and testing datasets will only keep those columns that are complete. (Note: This is a way of applying the 'complete.cases' function to the columns of a dataset.)
 
-##Our updated training dataset now has fewer variables to review in our analysis. Further, our final testing dataset has 
-##consistent columns in it. This will allow the fitted model to be applied to the testing dataset.
+Our updated training dataset now has fewer variables to review in our analysis. Further, our final testing dataset has consistent columns in it. This will allow the fitted model to be applied to the testing dataset.
 
 csums <- colSums(is.na(wm))
 
@@ -28,11 +26,7 @@ training_fewer_cols <- wm[, (colSums(is.na(wm)) == 0)]
 wm_test <- wm_test[, (colSums(is.na(wm)) == 0)]
 
 
-
-##Create another logical vector in order to delete additional unnecessary columns from the pared-down training and testing
-##datasets. Column names in the dataset containing the entries shown in the 'grepl' function will have a value of 'TRUE' 
-##in the logical vector. Since these are the columns we want to remove, we apply the negation of the logical vector against 
-##the columns of our dataset.
+Create another logical vector in order to delete additional unnecessary columns from the pared-down training and testing datasets. Column names in the dataset containing the entries shown in the 'grepl' function will have a value of 'TRUE' in the logical vector. Since these are the columns we want to remove, we apply the negation of the logical vector against the columns of our dataset.
 
 del_cols_log <- grepl("X|user_name|timestamp|new_window", colnames(training_fewer_cols))
 
@@ -41,8 +35,8 @@ training_fewer_cols <- training_fewer_cols[, !del_cols_log]
 wm_test_final <- wm_test[, !del_cols_log]
 
 
-##We now split the updated training dataset into a training dataset and a validation dataset. 
-#This validation dataset will allow us to perform cross validation when developing our model.
+We now split the updated training dataset into a training dataset and a validation dataset. 
+This validation dataset will allow us to perform cross validation when developing our model.
 
 inTrain = createDataPartition(y = training_fewer_cols$classe, p = 0.7, list = FALSE)
 
@@ -50,31 +44,23 @@ small_train = training_fewer_cols[inTrain, ]
 
 small_valid = training_fewer_cols[-inTrain, ]
 
-#At this point, our dataset contains 54 variables, with the last column containing the 'classe' variable we are trying to 
-#predict. We begin by looking at the correlations between the variables in our dataset. 
-#We may want to remove highly correlated predictors from our analysis and replace them with weighted combinations of predictors. This may allow a more 
-#complete capture of the information available.
+At this point, our dataset contains 54 variables, with the last column containing the 'classe' variable we are trying to predict. We begin by looking at the correlations between the variables in our dataset. 
+We may want to remove highly correlated predictors from our analysis and replace them with weighted combinations of predictors. This may allow a more complete capture of the information available.
 
 corMat <- cor(small_train[, -54])
 
 corrplot(corMat, order = "FPC", method = "color", type = "lower", tl.cex = 0.8, tl.col = rgb(0, 0, 0))
 
     
-    ![CorreplotGrid]([url=http://postimg.org/image/ukpfds1nb/][img=http://s15.postimg.org/ukpfds1nb/Correlation_Grid.jpg][/url])
+    ![Correlation_Grid](http://s15.postimg.org/ukpfds1nb/Correlation_Grid.jpg)
    
 
 
+The CorrelationGrid shows the correlation between pairs of the predictors in our dataset. From a high-level perspective darker blue and darker red squares indicate high positive and high negative correlations, respectively. Based on this observation, we choose to implement a principal components analysis to produce a set of linearly uncorrelated variables to use as our predictors.
 
-#The CorrelationGrid shows the correlation between pairs of the predictors in our dataset. From a high-level perspective darker #blue
-#and darker red squares indicate high positive and high negative correlations, respectively. Based on this observation, 
-#we choose to implement a principal components analysis to produce a set of linearly uncorrelated variables
-#to use as our predictors.
+ *Principal Components Analysis and Machine Learning*
 
-*Principal Components Analysis and Machine Learning*
-
-#We pre-process our data using a principal component analysis, leaving out the last column ('classe'). After pre-processing,
-#we use the 'predict' function to apply the pre-processing to both the training and validation subsets of the original larger 
-#'training' dataset.
+We pre-process our data using a principal component analysis, leaving out the last column ('classe'). After pre-processing, we use the 'predict' function to apply the pre-processing to both the training and validation subsets of the original larger 'training' dataset.
 
 preProc <- preProcess(small_train[, -54], method = "pca", thresh = 0.99)
 
@@ -83,39 +69,36 @@ trainPC <- predict(preProc, small_train[, -54])
 valid_testPC <- predict(preProc, small_valid[, -54])
 
 
-#Next, we train a model using a random forest approach on the smaller training dataset. We chose to specify the use of a 
-#cross validation method when applying the random forest routine in the 'trainControl()' parameter. Without specifying this, 
-#the default method (bootstrapping) would have been used. The bootstrapping method seemed to take a lot longer to complete,
-#while essentially producing the same level of 'accuracy'.
+Next, we train a model using a random forest approach on the smaller training dataset. We chose to specify the use of a cross validation method when applying the random forest routine in the 'trainControl()' parameter. Without specifying this, the default method (bootstrapping) would have been used. The bootstrapping method seemed to take a lot longer to complete,while essentially producing the same level of 'accuracy'.
 
 modelFit <- train(small_train$classe ~ ., method = "rf", data = trainPC, trControl = trainControl(method = "cv",
 number = 4), importance = TRUE)
     
     
-#We now review the relative importance of the resulting principal components of the trained model, 'modelFit'.    
+We now review the relative importance of the resulting principal components of the trained model, 'modelFit'.    
 
 varImpPlot(modelFit$finalModel, sort = TRUE, type = 1, pch = 19, col = 1, cex = 1, 
     main = "Importance of the Individual Principal Components")
     
-![GraphImage]([url=http://postimg.org/image/piy3r7rob/][img=http://s17.postimg.org/piy3r7rob/Graph_Image.jpg][/url])
 
-#As you look from the top to the bottom on the y-axis, this plot shows each of the principal components in order from most 
-#important to least important. The degree of importance is shown on the x-axis–increasing from left to right. 
-#Therefore, points high and to the right on this graph correspond to those principal components that are especially valuable 
-#in terms of being able to classify the observed training data.
+![GraphImage](http://s17.postimg.org/piy3r7rob/Graph_Image.jpg)
 
-**Cross Validation Testing and Out-of-Sample Error Estimate**
+As you look from the top to the bottom on the y-axis, this plot shows each of the principal components in order from most important to least important. The degree of importance is shown on the x-axis–increasing from left to right. 
+Therefore, points high and to the right on this graph correspond to those principal components that are especially valuable in terms of being able to classify the observed training data.
 
-#Call the 'predict' function again so that our trained model can be applied to our cross validation test dataset. 
-#We can then view the resulting table in the 'confusionMatrix' function's output to see how well the model 
-#predicted/classified the values in the validation test set (i.e. the 'reference' values)
+# Cross Validation Testing and Out-of-Sample Error Estimate
+
+Call the 'predict' function again so that our trained model can be applied to our cross validation test dataset. 
+We can then view the resulting table in the 'confusionMatrix' function's output to see how well the model 
+predicted/classified the values in the validation test set (i.e. the 'reference' values)
 
 pred_valid_rf <- predict(modelFit, valid_testPC)
+
 confus <- confusionMatrix(small_valid$classe, pred_valid_rf)
+
 confus$table
 
-#The estimated out-of-sample error is 1.000 minus the model's accuracy, the later of which is provided in the output 
-#of the confusionmatrix, or more directly via the 'postresample' function.
+The estimated out-of-sample error is 1.000 minus the model's accuracy, the later of which is provided in the output of the confusionmatrix, or more directly via the 'postresample' function.
 
 accur <- postResample(small_valid$classe, pred_valid_rf)
 
@@ -123,18 +106,19 @@ model_accuracy <- accur[[1]]
 
 model_accuracy
 
+And out of sample accuracy will be
+
 out_of_sample_error <- 1 - model_accuracy
 
 out_of_sample_error
 
-#The estimated accuracy of the model is 98.4% and the estimated out-of-sample error based on our fitted model applied to 
-#the cross validation dataset is 1.6%.
+The estimated accuracy of the model is 98.4% and the estimated out-of-sample error based on our fitted model applied to the cross validation dataset is 1.6%.
 
 
-**Predicted Results**
+# Predicted Results
 
-#Finally, we apply the pre-processing to the original testing dataset, after removing the extraneous column labeled 
-#'problem_id' (column 54). We then run our model against the testing dataset and display the predicted results.
+Finally, we apply the pre-processing to the original testing dataset, after removing the extraneous column labeled 
+'problem_id' (column 54). We then run our model against the testing dataset and display the predicted results.
 
 testPC <- predict(preProc, wm_test_final[, -54])
 
@@ -143,86 +127,11 @@ pred_final <- predict(modelFit, testPC)
 pred_final
 
 
-#NOTE : I am new to the Github and put a lot of efforts to include images in my course-write up but I could not. Also I was not
-#able to create gh-pages.
-#So if you want to take a look at the images you may prefer below links
+NOTE : I am new to the Github and put a lot of efforts to include images in my course-write up but I could not. 
+So if you want to take a look at the images you may prefer below links
 
-#http://s15.postimg.org/ukpfds1nb/Correlation_Grid.jpg
-#http://s17.postimg.org/5bknywu73/Graph_Image.png
+http://s15.postimg.org/ukpfds1nb/Correlation_Grid.jpg
+http://s17.postimg.org/5bknywu73/Graph_Image.png
 
-#Thanks in advance
-#Have a nice day!!
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    
-    
-
-    
-    
-    
-    
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+Thanks in advance
+Have a nice day!!
