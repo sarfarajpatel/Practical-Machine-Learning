@@ -127,10 +127,11 @@ pred_final <- predict(modelFit, testPC)
 pred_final
 
 
-NOTE : I am new to the Github and put a lot of efforts to include images in my course-write up but I could not. 
+Kind Request : I am new to the Github and I found that the behaviour of images is strange, it shows sometimes and not showing other time. 
 So if you want to take a look at the images you may prefer below links
 
 http://s15.postimg.org/ukpfds1nb/Correlation_Grid.jpg
+
 http://s17.postimg.org/5bknywu73/Graph_Image.png
 
 Thanks in advance
